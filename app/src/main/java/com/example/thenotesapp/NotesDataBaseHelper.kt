@@ -71,10 +71,10 @@ class NotesDataBaseHelper(context: Context) :
         db.close()
     }
 
-    fun getNoteByID(noteId: Int): Note{
+    fun getNoteByID(noteId: Int): Note {
         val db = readableDatabase
         val query = "SELECT * FROM $TABLE_NAME WHERE $COLUMN_ID = $noteId"
-        val cursor = db.rawQuery(query,null)
+        val cursor = db.rawQuery(query, null)
         cursor.moveToFirst()
 
         val id = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_ID))
@@ -84,5 +84,13 @@ class NotesDataBaseHelper(context: Context) :
         cursor.close()
         db.close()
         return Note(id, title, content)
+    }
+
+    fun deleteNote(noteId: Int) {
+        val db = writableDatabase
+        val whereClause = "$COLUMN_ID =?"
+        val whereArgs = arrayOf(noteId.toString())
+        db.delete(TABLE_NAME,whereClause, whereArgs)
+        db.close()
     }
 }
